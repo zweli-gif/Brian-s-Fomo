@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<!-- saved from url=(0058)file:///C:/Users/zweli/Downloads/briansfomo_immersive.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRIANSFOMO - Brian, Watch This</title>
+    <link href="./BRIANSFOMO - Brian, Watch This_files/css2" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --orange: #ff6b35;
+            --orange-light: #f7c59f;
+            --dark: #0a0a0a;
+            --darker: #050505;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--darker);
+            color: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* PRELOADER */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--darker);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            cursor: pointer;
+        }
+
+        #preloader h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            color: var(--orange);
+            margin-bottom: 20px;
+            letter-spacing: 8px;
+        }
+
+        #preloader p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .start-btn {
+            background: var(--orange);
+            color: var(--dark);
+            border: none;
+            padding: 20px 60px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255, 107, 53, 0.5);
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 107, 53, 0.6); }
+        }
+
+        /* MAIN CONTAINER */
+        #main-container {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* PROGRESS BAR */
+        #progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            z-index: 1000;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--orange), var(--orange-light));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* SECTION INDICATOR */
+        #section-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.5);
+            z-index: 1000;
+        }
+
+        /* CONTROLS */
+        #controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .control-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .control-btn:hover {
+            background: var(--orange);
+            border-color: var(--orange);
+        }
+
+        .control-btn.active {
+            background: var(--orange);
+            border-color: var(--orange);
+        }
+
+        /* SLIDE CONTAINER */
+        #slide-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+        }
+
+        .slide {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            max-width: 1000px;
+            opacity: 0;
+        }
+
+        .slide.active {
+            display: flex;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* TYPOGRAPHY */
+        .slide-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 5rem;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--orange), var(--orange-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide-text {
+            font-size: 2rem;
+            line-height: 1.6;
+            max-width: 800px;
+        }
+
+        .slide-text.large {
+            font-size: 3rem;
+            font-weight: 800;
+        }
+
+        .slide-text.huge {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 6rem;
+            letter-spacing: 4px;
+            color: var(--orange);
+        }
+
+        .highlight {
+            color: var(--orange);
+            font-weight: 800;
+        }
+
+        .dim {
+            color: #666;
+        }
+
+        /* ANIMATED ELEMENTS */
+        .word-pop {
+            display: inline-block;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: wordPop 0.4s ease forwards;
+        }
+
+        @keyframes wordPop {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .number-fly {
+            display: inline-block;
+            animation: numberFly 0.6s ease forwards;
+        }
+
+        @keyframes numberFly {
+            0% { opacity: 0; transform: translateX(-100px) rotate(-10deg); }
+            100% { opacity: 1; transform: translateX(0) rotate(0); }
+        }
+
+        /* SPECIAL SLIDES */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .stat-box {
+            background: rgba(255,107,53,0.1);
+            border: 1px solid rgba(255,107,53,0.3);
+            padding: 30px;
+            border-radius: 16px;
+            opacity: 0;
+            animation: statPop 0.5s ease forwards;
+        }
+
+        .stat-box:nth-child(1) { animation-delay: 0.1s; }
+        .stat-box:nth-child(2) { animation-delay: 0.2s; }
+        .stat-box:nth-child(3) { animation-delay: 0.3s; }
+        .stat-box:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes statPop {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .stat-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            color: var(--orange);
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* LAYER BOXES */
+        .layer-box {
+            background: rgba(255,255,255,0.03);
+            border-left: 4px solid var(--orange);
+            padding: 25px 30px;
+            margin: 15px 0;
+            text-align: left;
+            width: 100%;
+            max-width: 700px;
+            opacity: 0;
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .layer-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            color: var(--orange);
+            margin-bottom: 10px;
+        }
+
+        .layer-text {
+            font-size: 1.1rem;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        /* EXPERIENCE TYPES */
+        .experience-item {
+            font-size: 1.8rem;
+            margin: 15px 0;
+            opacity: 0;
+            animation: expPop 0.4s ease forwards;
+        }
+
+        .experience-item:nth-child(1) { animation-delay: 0.2s; }
+        .experience-item:nth-child(2) { animation-delay: 0.4s; }
+        .experience-item:nth-child(3) { animation-delay: 0.6s; }
+        .experience-item:nth-child(4) { animation-delay: 0.8s; }
+        .experience-item:nth-child(5) { animation-delay: 1.0s; }
+
+        @keyframes expPop {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* COMMITMENT LIST */
+        .commitment-item {
+            font-size: 1.4rem;
+            margin: 12px 0;
+            text-align: left;
+            opacity: 0;
+            animation: commitPop 0.4s ease forwards;
+        }
+
+        .commitment-item::before {
+            content: "✓";
+            color: var(--orange);
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        /* FINAL CTA */
+        .final-cta {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 5rem;
+            letter-spacing: 4px;
+            animation: ctaPulse 2s infinite;
+        }
+
+        @keyframes ctaPulse {
+            0%, 100% { color: var(--orange); text-shadow: 0 0 20px rgba(255,107,53,0.3); }
+            50% { color: var(--orange-light); text-shadow: 0 0 40px rgba(255,107,53,0.6); }
+        }
+
+        .url {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            color: var(--orange-light);
+            margin-top: 20px;
+        }
+
+        /* BACKGROUND EFFECTS */
+        .bg-pulse {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,107,53,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: bgPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.8; }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .slide-title { font-size: 3rem; }
+            .slide-text { font-size: 1.4rem; }
+            .slide-text.large { font-size: 2rem; }
+            .slide-text.huge { font-size: 4rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .stat-number { font-size: 3rem; }
+            #slide-container { padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <h1>BRIANSFOMO</h1>
+        <p>Hey Brian. This is for you.</p>
+        <button class="start-btn" onclick="startExperience()">▶ TAP TO START</button>
+        <p style="margin-top: 30px; color: #444; font-size: 0.9rem;">Turn your sound ON 🔊</p>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div id="main-container">
+        <div class="bg-pulse"></div>
+        
+        <!-- PROGRESS -->
+        <div id="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+
+        <!-- SECTION INDICATOR -->
+        <div id="section-indicator">1 / 28</div>
+
+        <!-- CONTROLS -->
+        <div id="controls">
+            <button class="control-btn" onclick="prevSlide()" title="Previous">⏮</button>
+            <button class="control-btn active" id="playPauseBtn" onclick="togglePlayPause()" title="Play/Pause">⏸</button>
+            <button class="control-btn" onclick="nextSlide()" title="Next">⏭</button>
+            <button class="control-btn" onclick="toggleMute()" id="muteBtn" title="Mute">🔊</button>
+        </div>
+
+        <!-- SLIDES -->
+        <div id="slide-container">
+            
+            <!-- SLIDE 1: HOOK -->
+            <div class="slide" data-duration="4000" data-text="YO BRIAN.">
+                <div class="slide-text huge">YO BRIAN.</div>
+            </div>
+
+            <!-- SLIDE 2 -->
+            <div class="slide" data-duration="3000" data-text="Stop what you&#39;re doing.">
+                <div class="slide-text large">Stop what you're doing.</div>
+            </div>
+
+            <!-- SLIDE 3 -->
+            <div class="slide" data-duration="4000" data-text="This is going to change everything.">
+                <div class="slide-text large">This is going to change <span class="highlight">everything.</span></div>
+            </div>
+
+            <!-- SLIDE 4 -->
+            <div class="slide" data-duration="4000" data-text="Ten minutes. That&#39;s all I need. And by the end? You&#39;re going to want IN.">
+                <div class="slide-text">Ten minutes. That's all I need.<br><br>And by the end? You're going to want <span class="highlight">IN.</span></div>
+            </div>
+
+            <!-- SLIDE 5 -->
+            <div class="slide" data-duration="3000" data-text="Let&#39;s GO.">
+                <div class="slide-text huge">LET'S GO.</div>
+            </div>
+
+            <!-- SLIDE 6: THE PROBLEM -->
+            <div class="slide" data-duration="4000" data-text="Here&#39;s the truth nobody talks about.">
+                <div class="slide-title">THE TRUTH</div>
+                <div class="slide-text">Here's the truth nobody talks about.</div>
+            </div>
+
+            <!-- SLIDE 7 -->
+            <div class="slide" data-duration="4000" data-text="South Africa is LONELY.">
+                <div class="slide-text huge">SOUTH AFRICA IS<br><span class="highlight">LONELY.</span></div>
+            </div>
+
+            <!-- SLIDE 8 -->
+            <div class="slide" data-duration="6000" data-text="Not sad-movie lonely. Not dramatic lonely. The quiet kind. You&#39;re busy. You&#39;re working. You&#39;re surrounded by people online. But you eat alone. You spend evenings alone. You scroll past other people&#39;s lives... alone.">
+                <div class="slide-text">
+                    Not sad-movie lonely. Not dramatic lonely.<br><br>
+                    <span class="highlight">The quiet kind.</span><br><br>
+                    <span class="dim">You eat alone. You spend evenings alone.<br>You scroll past other people's lives... alone.</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 9 -->
+            <div class="slide" data-duration="5000" data-text="33% unemployment. Millions of talented people with nowhere to go. Uber needs a car. Airbnb needs a flat.">
+                <div class="slide-text">
+                    <span class="highlight">33% unemployment.</span><br><br>
+                    Uber needs a car. Airbnb needs a flat.<br><br>
+                    What do YOU need?
+                </div>
+            </div>
+
+            <!-- SLIDE 10 -->
+            <div class="slide" data-duration="3500" data-text="JUST. A. TABLE.">
+                <div class="slide-text huge">JUST. A. TABLE.</div>
+            </div>
+
+            <!-- SLIDE 11: THE SOLUTION -->
+            <div class="slide" data-duration="3000" data-text="BRIANSFOMO.">
+                <div class="slide-title" style="font-size: 8rem;">BRIANSFOMO</div>
+            </div>
+
+            <!-- SLIDE 12 -->
+            <div class="slide" data-duration="4000" data-text="End loneliness. Fight unemployment. Build bridges.">
+                <div class="slide-text large">
+                    End loneliness.<br>
+                    Fight unemployment.<br>
+                    <span class="highlight">Build bridges.</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 13 -->
+            <div class="slide" data-duration="5000" data-text="This is NOT dating. This is NOT networking. This is NOT another events app. This is BELONGING.">
+                <div class="slide-text">
+                    This is <span class="dim">NOT</span> dating.<br>
+                    This is <span class="dim">NOT</span> networking.<br>
+                    This is <span class="dim">NOT</span> another events app.<br><br>
+                    This is <span class="highlight">BELONGING.</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 14 -->
+            <div class="slide" data-duration="5000" data-text="We call everyone on the platform MNTASE. Mntase means child from home. If you&#39;re here? You BELONG.">
+                <div class="slide-text huge">MNTASE</div>
+                <div class="slide-text" style="margin-top: 20px;">"Child from home"<br><br>If you're here? <span class="highlight">You BELONG.</span></div>
+            </div>
+
+            <!-- SLIDE 15: EXPERIENCE TYPES -->
+            <div class="slide" data-duration="7000" data-text="And it&#39;s not just dinner. Come sit with us. Come walk with us. Come listen with us. Come play with us. Come be quiet with us.">
+                <div class="slide-title">THE EXPERIENCES</div>
+                <div class="experience-item"><span class="highlight">COME SIT WITH US</span> — shared meals</div>
+                <div class="experience-item"><span class="highlight">COME WALK WITH US</span> — hikes, tours</div>
+                <div class="experience-item"><span class="highlight">COME LISTEN WITH US</span> — music, poetry</div>
+                <div class="experience-item"><span class="highlight">COME PLAY WITH US</span> — games, sports</div>
+                <div class="experience-item"><span class="highlight">COME BE QUIET WITH US</span> — meditation</div>
+            </div>
+
+            <!-- SLIDE 16: THE BRIDGE -->
+            <div class="slide" data-duration="5000" data-text="A person in Soweto. A person in Sandton. SAME TABLE. SAME MEAL. DIFFERENT WORLDS... MEETING.">
+                <div class="slide-text">A person in <span class="highlight">Soweto.</span><br>A person in <span class="highlight">Sandton.</span></div>
+                <div class="slide-text huge" style="margin-top: 30px;">SAME TABLE.</div>
+            </div>
+
+            <!-- SLIDE 17 -->
+            <div class="slide" data-duration="4000" data-text="Ubuntu in action. I am because WE are.">
+                <div class="slide-text large">Ubuntu in action:<br><br><span class="highlight">I am because WE are.</span></div>
+            </div>
+
+            <!-- SLIDE 18: THE BUSINESS -->
+            <div class="slide" data-duration="5000" data-text="Now let&#39;s talk BUSINESS. Curators host gatherings. Mntases book seats. Platform takes 30%. Curators keep 70%.">
+                <div class="slide-title">THE BUSINESS</div>
+                <div class="slide-text">
+                    Curators host gatherings<br>
+                    Mntases book seats<br>
+                    Platform takes <span class="highlight">30%</span><br>
+                    Curators keep <span class="highlight">70%</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 19 -->
+            <div class="slide" data-duration="4000" data-text="NO CAR NEEDED. NO PROPERTY NEEDED. NO DEGREE NEEDED. Just your culture. Your table. Your story.">
+                <div class="slide-text large">
+                    <span class="dim">NO CAR NEEDED.</span><br>
+                    <span class="dim">NO PROPERTY NEEDED.</span><br>
+                    <span class="dim">NO DEGREE NEEDED.</span><br><br>
+                    <span class="highlight">Just your culture. Your table. Your story.</span>
+                </div>
+            </div>
+
+            <!-- SLIDE 20: MARKET SIZE -->
+            <div class="slide" data-duration="4000" data-text="Now let me show you how BIG this gets. The global loneliness economy?">
+                <div class="slide-title">THE OPPORTUNITY</div>
+                <div class="slide-text">The global loneliness economy?</div>
+            </div>
+
+            <!-- SLIDE 21 -->
+            <div class="slide" data-duration="4000" data-text="$1.2 TRILLION. That&#39;s not a typo. TRILLION.">
+                <div class="slide-text huge" style="font-size: 8rem;">$1.2T</div>
+                <div class="slide-text">That's not a typo. <span class="highlight">TRILLION.</span></div>
+            </div>
+
+            <!-- SLIDE 22 -->
+            <div class="slide" data-duration="5000" data-text="NONE of them are in South Africa. NONE of them solve the trust problem. NONE of them create income for hosts. We&#39;re not competing. We&#39;re LEAPFROGGING.">
+                <div class="slide-text">
+                    EatWith. Timeleft. Airbnb.<br><br>
+                    <span class="highlight">NONE</span> are in South Africa.<br>
+                    <span class="highlight">NONE</span> solve the trust problem.<br>
+                    <span class="highlight">NONE</span> create income for hosts.<br><br>
+                    We're <span class="highlight">LEAPFROGGING</span> them.
+                </div>
+            </div>
+
+            <!-- SLIDE 23: FIVE YEAR VISION -->
+            <div class="slide" data-duration="8000" data-text="Year 1: 200 Curators. Year 2: 600 Curators. Year 3: 1,400 Curators. Year 4: 3,000 Curators. Year 5: 6,000 Curators across South Africa.">
+                <div class="slide-title">FIVE YEAR VISION</div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-number">432K</div>
+                        <div class="stat-label">Events / Year</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">3.5M</div>
+                        <div class="stat-label">Attendees</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">R864M</div>
+                        <div class="stat-label">Gross Value</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">R125M</div>
+                        <div class="stat-label">EBITDA</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 24: THE MOAT -->
+            <div class="slide" data-duration="4000" data-text="But here&#39;s what makes this UNBEATABLE. Our moat isn&#39;t technology. It isn&#39;t marketing budget. IT&#39;S TRUST.">
+                <div class="slide-title">THE MOAT</div>
+                <div class="slide-text">Our moat isn't technology.<br>It isn't marketing budget.<br><br><span class="highlight" style="font-size: 3rem;">IT'S TRUST.</span></div>
+            </div>
+
+            <!-- SLIDE 25: TRUST LAYERS -->
+            <div class="slide" data-duration="12000" data-text="Layer one: Referral-only curators. Every host is vouched for. Layer two: Mntase verification. Guests get vetted too. You can&#39;t go to a HOME event until you&#39;ve been to a PUBLIC event first. Layer three: Community verification. Video calls with real humans. Layer four: Safe Exit Protocol. Ndilungile means I need a check-in. Yizo means I&#39;m leaving now, no questions. Layer five: Cultural anchoring. We speak Xhosa. We speak ubuntu. This is SOUTH AFRICAN. Layer six: We track patterns, not people.">
+                <div class="layer-box" style="animation-delay: 0.2s;">
+                    <div class="layer-title">LAYER 1: Referral-Only Curators</div>
+                    <div class="layer-text">Every host is VOUCHED FOR. No cold applications.</div>
+                </div>
+                <div class="layer-box" style="animation-delay: 0.4s;">
+                    <div class="layer-title">LAYER 2: Mntase Verification</div>
+                    <div class="layer-text">Guests get vetted too. PUBLIC event first, then HOME events.</div>
+                </div>
+                <div class="layer-box" style="animation-delay: 0.6s;">
+                    <div class="layer-title">LAYER 3: Community Verification</div>
+                    <div class="layer-text">Video calls with real humans. Not algorithms.</div>
+                </div>
+                <div class="layer-box" style="animation-delay: 0.8s;">
+                    <div class="layer-title">LAYER 4: Safe Exit Protocol</div>
+                    <div class="layer-text">"Ndilungile" = check-in. "Yizo" = leaving, no questions.</div>
+                </div>
+                <div class="layer-box" style="animation-delay: 1.0s;">
+                    <div class="layer-title">LAYER 5: Cultural Anchoring</div>
+                    <div class="layer-text">Xhosa. Ubuntu. SOUTH AFRICAN from the ground up.</div>
+                </div>
+                <div class="layer-box" style="animation-delay: 1.2s;">
+                    <div class="layer-title">LAYER 6: Pattern Tracking</div>
+                    <div class="layer-text">We monitor systems, not individuals.</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 26: VALENTINE'S DAY -->
+            <div class="slide" data-duration="5000" data-text="VALENTINE&#39;S DAY 2026. 32 days from TODAY. We&#39;re offering something different. A table. A conversation. A reminder that you don&#39;t have to be alone that night.">
+                <div class="slide-title">VALENTINE'S DAY 2026</div>
+                <div class="slide-text huge">32 DAYS</div>
+                <div class="slide-text">A table. A conversation.<br><span class="highlight">You don't have to be alone.</span></div>
+            </div>
+
+            <!-- SLIDE 27: TARGETS -->
+            <div class="slide" data-duration="6000" data-text="20 Curators. 20 Events. 160 Guests. R40,000 Gross Value. 32 days. 20 dinners. 160 strangers becoming FRIENDS.">
+                <div class="slide-title">THE TARGETS</div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-number">20</div>
+                        <div class="stat-label">Curators</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">20</div>
+                        <div class="stat-label">Events</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">160</div>
+                        <div class="stat-label">Guests</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">R40K</div>
+                        <div class="stat-label">Gross Value</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 28: BRIAN'S ROLE -->
+            <div class="slide" data-duration="4000" data-text="NOW. YOUR ROLE. Brian Valaza.">
+                <div class="slide-title">YOUR ROLE</div>
+                <div class="slide-text huge">BRIAN VALAZA</div>
+            </div>
+
+            <!-- SLIDE 29 -->
+            <div class="slide" data-duration="4000" data-text="MARKETING MANAGER. Not helping out. Not doing me a favour. This is YOUR position. Your TITLE.">
+                <div class="slide-text huge" style="color: var(--orange);">MARKETING<br>MANAGER</div>
+                <div class="slide-text" style="margin-top: 20px;">Not "helping out."<br>This is YOUR <span class="highlight">TITLE.</span></div>
+            </div>
+
+            <!-- SLIDE 30 -->
+            <div class="slide" data-duration="5000" data-text="For Valaza, your mission is crystal clear: GET MNTASES TO THE TABLE. You know people. Friends. Colleagues. Networks. People who trust YOU.">
+                <div class="slide-text huge">GET MNTASES<br>TO THE TABLE</div>
+                <div class="slide-text" style="margin-top: 20px;">You know people.<br>People who trust <span class="highlight">YOU.</span></div>
+            </div>
+
+            <!-- SLIDE 31: FINANCIALS -->
+            <div class="slide" data-duration="6000" data-text="The full picture. R9,210 startup cost. 63% contribution margin. 200 curators equals EBITDA positive. VENTURE-SCALE with COMMUNITY values.">
+                <div class="slide-title">THE NUMBERS</div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-number">R9.2K</div>
+                        <div class="stat-label">Startup Cost</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">63%</div>
+                        <div class="stat-label">Margin</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">200</div>
+                        <div class="stat-label">Curators = Profit</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">R8.4K</div>
+                        <div class="stat-label">Curator Income/Mo</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 32: COMMITMENTS -->
+            <div class="slide" data-duration="8000" data-text="We make these PROMISES. We will NEVER sacrifice trust for growth. We will NEVER relax standards to hit targets. We will NEVER pivot to tourism at belonging&#39;s expense. Curator economics ALWAYS come first. Everyone can leave any gathering SAFELY. DIGNITY over optimisation. ALWAYS.">
+                <div class="slide-title">OUR PROMISES</div>
+                <div class="commitment-item" style="animation-delay: 0.2s;">NEVER sacrifice trust for growth</div>
+                <div class="commitment-item" style="animation-delay: 0.4s;">NEVER relax standards to hit targets</div>
+                <div class="commitment-item" style="animation-delay: 0.6s;">NEVER pivot to tourism at belonging's expense</div>
+                <div class="commitment-item" style="animation-delay: 0.8s;">Curator economics ALWAYS first</div>
+                <div class="commitment-item" style="animation-delay: 1.0s;">Everyone can leave SAFELY</div>
+                <div class="commitment-item" style="animation-delay: 1.2s;">DIGNITY over optimisation</div>
+            </div>
+
+            <!-- SLIDE 33: CLOSE -->
+            <div class="slide" data-duration="6000" data-text="So here it is, Brian. $1.2 TRILLION opportunity. Trust moat that takes YEARS to build. R864 MILLION by Year 5. 6,000 curators earning from their culture. And YOU — Marketing Manager — bringing people to the table.">
+                <div class="slide-text">
+                    <span class="highlight">$1.2T</span> opportunity<br>
+                    Trust moat that takes <span class="highlight">YEARS</span> to build<br>
+                    <span class="highlight">R864M</span> by Year 5<br>
+                    <span class="highlight">6,000</span> curators earning from their culture<br><br>
+                    And <span class="highlight">YOU</span> — Marketing Manager
+                </div>
+            </div>
+
+            <!-- SLIDE 34 -->
+            <div class="slide" data-duration="5000" data-text="32 days. 20 dinners. 160 strangers becoming friends. You ready?">
+                <div class="slide-text huge">32 DAYS<br>20 DINNERS<br>160 FRIENDS</div>
+                <div class="slide-text large" style="margin-top: 30px;">You ready?</div>
+            </div>
+
+            <!-- SLIDE 35: FINAL CTA -->
+            <div class="slide" data-duration="8000" data-text="COME BE WITH US, MNTASE. briansfomo.co.za">
+                <div class="final-cta">COME BE WITH US,<br>MNTASE.</div>
+                <div class="url">briansfomo.co.za</div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        let isPlaying = true;
+        let isMuted = false;
+        let slideTimeout;
+        let synth = window.speechSynthesis;
+        let slides;
+        let totalSlides;
+
+        function startExperience() {
+            document.getElementById('preloader').style.display = 'none';
+            document.getElementById('main-container').style.display = 'block';
+            
+            slides = document.querySelectorAll('.slide');
+            totalSlides = slides.length;
+            
+            showSlide(0);
+            playAudio();
+        }
+
+        function showSlide(index) {
+            // Hide all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Show current slide
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+
+            // Update progress
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('section-indicator').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+            // Auto-advance if playing
+            if (isPlaying && currentSlide < totalSlides - 1) {
+                const duration = parseInt(slides[currentSlide].dataset.duration) || 5000;
+                clearTimeout(slideTimeout);
+                slideTimeout = setTimeout(() => {
+                    nextSlide();
+                }, duration);
+            }
+        }
+
+        function playAudio() {
+            if (isMuted) return;
+            
+            synth.cancel(); // Stop any current speech
+            
+            const text = slides[currentSlide].dataset.text;
+            if (text) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 1.1;
+                utterance.pitch = 1;
+                
+                // Try to get a good voice
+                const voices = synth.getVoices();
+                const preferredVoice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Google') || v.lang.includes('en'));
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                }
+                
+                synth.speak(utterance);
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+                playAudio();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+                playAudio();
+            }
+        }
+
+        function togglePlayPause() {
+            isPlaying = !isPlaying;
+            const btn = document.getElementById('playPauseBtn');
+            
+            if (isPlaying) {
+                btn.textContent = '⏸';
+                btn.classList.add('active');
+                // Resume
+                const duration = parseInt(slides[currentSlide].dataset.duration) || 5000;
+                slideTimeout = setTimeout(() => {
+                    nextSlide();
+                }, duration);
+            } else {
+                btn.textContent = '▶';
+                btn.classList.remove('active');
+                clearTimeout(slideTimeout);
+                synth.cancel();
+            }
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            const btn = document.getElementById('muteBtn');
+            btn.textContent = isMuted ? '🔇' : '🔊';
+            
+            if (isMuted) {
+                synth.cancel();
+            } else {
+                playAudio();
+            }
+        }
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+                playAudio();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+                playAudio();
+            } else if (e.key === 'p') {
+                togglePlayPause();
+            } else if (e.key === 'm') {
+                toggleMute();
+            }
+        });
+
+        // Load voices
+        if (synth.onvoiceschanged !== undefined) {
+            synth.onvoiceschanged = () => {};
+        }
+    </script>
+
+
+</body></html>
